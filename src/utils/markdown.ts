@@ -11,7 +11,8 @@ const md: MarkdownIt = new MarkdownIt({
   highlight(str: string, lang: string): string {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang }).value}</code></pre>`;
+        const highlighted = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
+        return `<pre class="hljs"><code class="language-${lang}">${highlighted}</code></pre>`;
       } catch (_) { /* fall through */ }
     }
     return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`;
