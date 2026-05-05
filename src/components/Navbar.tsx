@@ -3,22 +3,38 @@ import { FileText } from 'lucide-react';
 export default function Navbar() {
   return (
     <nav
-      className="sticky top-0 z-50 backdrop-blur-md"
+      className="sticky top-0 z-50"
       style={{
-        background: 'rgba(15, 15, 15, 0.85)',
+        background: 'rgba(10, 10, 10, 0.72)',
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}
     >
-      <div className="mx-auto flex items-center justify-between" style={{ maxWidth: 1200, height: 72, padding: '0 1.5rem' }}>
+      <div className="app-container flex items-center justify-between" style={{ height: 72 }}>
         {/* Logo */}
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center rounded-lg" style={{ width: 36, height: 36, background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <FileText size={18} color="#f5f5f5" />
+          <div
+            className="flex items-center justify-center rounded-xl"
+            style={{
+              width: 34,
+              height: 34,
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          >
+            <FileText size={16} color="#e4e4e7" />
           </div>
-          <span className="text-white font-semibold text-lg tracking-tight">Local MD</span>
+          <span className="text-white font-semibold tracking-tight" style={{ fontSize: '1.05rem' }}>
+            Local MD
+          </span>
           <span
             className="text-xs font-mono rounded-full px-2 py-0.5"
-            style={{ background: 'rgba(255,255,255,0.06)', color: '#a1a1aa', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              color: '#71717a',
+              border: '1px solid rgba(255,255,255,0.06)',
+            }}
           >
             MD
           </span>
@@ -30,9 +46,9 @@ export default function Navbar() {
             <span
               key={item}
               className="text-sm cursor-default transition-colors"
-              style={{ color: '#a1a1aa' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#f5f5f5')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#a1a1aa')}
+              style={{ color: '#71717a', transition: 'color 160ms ease' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#d4d4d8'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#71717a'; }}
             >
               {item}
             </span>

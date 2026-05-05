@@ -21,56 +21,53 @@ export default function SourcePanel({ markdown, onToast }: Props) {
   if (!markdown) return null;
 
   return (
-    <section className="source-section px-6 pb-12 no-print">
-      <div
-        className="mx-auto rounded-2xl overflow-hidden"
-        style={{ maxWidth: 1200, background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}
-      >
+    <section className="source-section no-print">
+      <div className="card" style={{ overflow: 'hidden' }}>
         {/* Toggle header */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-between px-5 sm:px-6 py-4 transition-colors cursor-pointer"
-          style={{ color: '#a1a1aa' }}
+          className="w-full flex items-center justify-between cursor-pointer"
+          style={{
+            color: '#71717a',
+            padding: 'clamp(14px, 2vw, 18px) clamp(18px, 2.5vw, 24px)',
+            transition: 'background 160ms ease',
+          }}
           onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
           onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
           <span className="text-sm font-medium flex items-center gap-2">
             查看源 Markdown
-            <span className="text-xs font-mono" style={{ color: '#52525b' }}>
+            <span className="text-xs font-mono" style={{ color: '#3f3f46' }}>
               {markdown.length} 字符
             </span>
           </span>
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
 
-        {/* Content */}
-        {expanded && (
-          <div className="px-5 sm:px-6 pb-5">
-            <div className="flex justify-end mb-2">
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.06)', color: '#a1a1aa', border: '1px solid rgba(255,255,255,0.08)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+        {/* Collapsible content */}
+        <div className="collapse-content" data-open={expanded ? 'true' : 'false'}>
+          <div className="collapse-inner">
+            <div style={{ padding: '0 clamp(18px, 2.5vw, 24px) clamp(18px, 2.5vw, 24px)' }}>
+              <div className="flex justify-end mb-2">
+                <button onClick={handleCopy} className="btn">
+                  <Copy size={12} /> 复制源码
+                </button>
+              </div>
+              <pre
+                className="rounded-xl overflow-auto font-mono text-sm leading-relaxed"
+                style={{
+                  background: '#0c0c0c',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  padding: '16px 20px',
+                  color: '#71717a',
+                  maxHeight: 500,
+                }}
               >
-                <Copy size={12} /> 复制源码
-              </button>
+                <code>{markdown}</code>
+              </pre>
             </div>
-            <pre
-              className="rounded-xl overflow-auto font-mono text-sm leading-relaxed"
-              style={{
-                background: '#0f0f0f',
-                border: '1px solid rgba(255,255,255,0.06)',
-                padding: '1rem 1.25rem',
-                color: '#a1a1aa',
-                maxHeight: 500,
-              }}
-            >
-              <code>{markdown}</code>
-            </pre>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
