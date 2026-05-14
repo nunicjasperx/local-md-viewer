@@ -101,42 +101,62 @@ ${renderedHtml}
 }
 
 export async function downloadWord(renderedHtml: string, filename: string): Promise<void> {
-  const name = getBaseFilename(filename) + '.docx';
-  const wordHtml = `
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:w="urn:schemas-microsoft-com:office:word"
-      xmlns="http://www.w3.org/TR/REC-html40">
+  const name = getBaseFilename(filename) + '.doc';
+  const title = getBaseFilename(filename);
+  const wordHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
 <head>
-  <meta charset="UTF-8">
-  <title>${getBaseFilename(filename)}</title>
-  <style>
-    body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.6; color: #333; padding: 20px; }
-    h1 { font-size: 24pt; font-weight: bold; margin-bottom: 12pt; border-bottom: 2px solid #ddd; padding-bottom: 6pt; }
-    h2 { font-size: 18pt; font-weight: bold; margin-top: 18pt; margin-bottom: 8pt; border-bottom: 1px solid #eee; padding-bottom: 4pt; }
-    h3 { font-size: 14pt; font-weight: bold; margin-top: 14pt; margin-bottom: 6pt; }
-    h4, h5, h6 { font-size: 12pt; font-weight: bold; margin-top: 12pt; margin-bottom: 4pt; }
-    p { margin-bottom: 8pt; }
-    ul, ol { margin-bottom: 8pt; padding-left: 24pt; }
-    li { margin-bottom: 4pt; }
-    blockquote { border-left: 3px solid #3b82f6; padding: 8pt 12pt; margin-bottom: 8pt; background: #f0f7ff; color: #555; }
-    pre { background: #f3f4f6; border: 1px solid #ddd; border-radius: 4pt; padding: 8pt 12pt; margin-bottom: 10pt; font-family: Consolas, monospace; font-size: 10pt; }
-    code { background: #f3f4f6; padding: 1pt 4pt; border-radius: 2pt; font-family: Consolas, monospace; font-size: 10pt; }
-    pre code { background: transparent; padding: 0; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 10pt; }
-    th, td { border: 1px solid #ddd; padding: 6pt 8pt; text-align: left; }
-    th { background: #f3f4f6; font-weight: bold; }
-    hr { border: none; height: 1px; background: #ddd; margin: 16pt 0; }
-    img { max-width: 100%; }
-    a { color: #2563eb; }
-    input[type="checkbox"] { margin-right: 4pt; }
-  </style>
+<meta charset="UTF-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 15">
+<!--[if gte mso 9]><xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml><![endif]-->
+<title>${title}</title>
+<style>
+p { margin: 0 0 8pt 0; }
+h1 { font-size: 24pt; font-weight: bold; margin: 0 0 12pt 0; border-bottom: 2pt solid #ddd; padding-bottom: 6pt; }
+h2 { font-size: 18pt; font-weight: bold; margin: 18pt 0 8pt 0; border-bottom: 1pt solid #eee; padding-bottom: 4pt; }
+h3 { font-size: 14pt; font-weight: bold; margin: 14pt 0 6pt 0; }
+h4, h5, h6 { font-size: 12pt; font-weight: bold; margin: 12pt 0 4pt 0; }
+ul, ol { margin: 0 0 8pt 0; padding-left: 24pt; }
+li { margin-bottom: 4pt; }
+blockquote { border-left: 3pt solid #3b82f6; padding: 8pt 12pt; margin: 0 0 8pt 0; background: #f0f7ff; color: #555; }
+pre { background: #f3f4f6; border: 1pt solid #ddd; padding: 8pt 12pt; margin: 0 0 10pt 0; font-family: Consolas, monospace; font-size: 10pt; }
+code { background: #f3f4f6; padding: 1pt 4pt; font-family: Consolas, monospace; font-size: 10pt; }
+pre code { background: transparent; padding: 0; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 10pt; }
+th, td { border: 1pt solid #ddd; padding: 6pt 8pt; text-align: left; }
+th { background: #f3f4f6; font-weight: bold; }
+hr { border: none; height: 1pt; background: #ddd; margin: 16pt 0; }
+img { max-width: 100%; }
+a { color: #2563eb; }
+</style>
 </head>
 <body>
 ${renderedHtml}
 </body>
 </html>`;
 
-  const blob = new Blob([wordHtml], { type: 'application/msword' });
+  const boundary = '----=_NextPart_' + Math.random().toString(36).slice(2);
+  const mhtml = `MIME-Version: 1.0
+Content-Type: multipart/related; boundary="${boundary}"
+
+--${boundary}
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///./${encodeURIComponent(name)}
+
+${wordHtml}
+
+--${boundary}--`;
+
+  const blob = new Blob([mhtml], { type: 'application/msword' });
   triggerDownload(blob, name);
 }
 
